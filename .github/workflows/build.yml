@@ -15,6 +15,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Extract source files from ZIP
+        run: |
+          Expand-Archive -Path wrazzedeneme-main.zip -DestinationPath .
+          dir
+
       - name: Setup MSVC x64 environment
         uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -22,22 +27,26 @@ jobs:
 
       - name: Create output directory
         run: mkdir build
+        working-directory: wrazzedeneme-main/UE5-ProSoccerOnline2-main
 
       - name: Compile PSOAnalyzer.exe
+        working-directory: wrazzedeneme-main/UE5-ProSoccerOnline2-main
         run: |
           cl.exe /EHsc /DWIN32_LEAN_AND_MEAN /O2 /I include /Fe:build\PSOAnalyzer.exe src\main.cpp src\Process.cpp /link /OUT:build\PSOAnalyzer.exe
 
       - name: Compile BypassDll.dll
+        working-directory: wrazzedeneme-main/UE5-ProSoccerOnline2-main
         run: |
           cl.exe /EHsc /DWIN32_LEAN_AND_MEAN /O2 /LD /I include /Fe:build\BypassDll.dll src\BypassDll.cpp /link /OUT:build\BypassDll.dll
 
       - name: List build outputs
         run: dir build
+        working-directory: wrazzedeneme-main/UE5-ProSoccerOnline2-main
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: pso-analyzer-x64
-          path: build/*
+          path: wrazzedeneme-main/UE5-ProSoccerOnline2-main/build/*
           retention-days: 7
           
