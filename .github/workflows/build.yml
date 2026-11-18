@@ -1,4 +1,4 @@
-Name: Build PSO Analyzer
+name: Build PSO Analyzer
 
 on:
   push:
