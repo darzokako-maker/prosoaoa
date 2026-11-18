@@ -42,6 +42,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pso-analyzer-x64
-          path: wrazzedeneme-main/UE5-ProSoccerOnline2-main/build\*
+          path: wrazzedeneme-main/UE5-ProSoccerOnline2-main/build/*
           retention-days: 7
           
