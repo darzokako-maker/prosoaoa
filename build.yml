@@ -1,0 +1,42 @@
+name: Build PSO Analyzer
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup MSVC x64 environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Create output directory
+        run: mkdir build
+
+      - name: Compile PSOAnalyzer.exe
+        run: |
+          cl.exe /EHsc /DWIN32_LEAN_AND_MEAN /O2 /I include /Fe:build\PSOAnalyzer.exe src\main.cpp src\Process.cpp /link /OUT:build\PSOAnalyzer.exe
+
+      - name: Compile BypassDll.dll
+        run: |
+          cl.exe /EHsc /DWIN32_LEAN_AND_MEAN /O2 /LD /I include /Fe:build\BypassDll.dll src\BypassDll.cpp /link /OUT:build\BypassDll.dll
+
+      - name: List build outputs
+        run: dir build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pso-analyzer-x64
+          path: build\*
+          retention-days: 7
